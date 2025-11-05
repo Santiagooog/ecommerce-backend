@@ -4,7 +4,7 @@ import {
   getUserAddresses, 
   removeAddress, 
   makeDefaultAddress 
-} from "../controllers/address.controller.js";
+} from "../controllers/addressController.js";
 
 const router = Router();
 
