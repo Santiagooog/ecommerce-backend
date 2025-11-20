@@ -3,15 +3,48 @@ import { db } from "../config/db.js";
 
 const router = Router();
 
+
+
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+
+  const [product] = await db.query(
+    "SELECT * FROM producto WHERE id_producto = ?",
+    [id]
+  );
+
+  if (product.length === 0)
+    return res.status(404).json({ error: "Producto no encontrado" });
+
+  res.json(product[0]);
+});
+
+
+
 // Obtener todos los productos
 router.get("/", async (req, res) => {
   try {
-    const [rows] = await db.query("SELECT * FROM Producto");
+    const { categoria } = req.query;
+
+    console.log("Categoria recibida:", categoria);
+
+    let query = "SELECT * FROM producto";
+    let params = [];
+
+    if (categoria) {
+      query += " WHERE LOWER(categoria) = LOWER(?)";
+      params.push(categoria);
+    }
+
+    const [rows] = await db.query(query, params);
     res.json(rows);
   } catch (err) {
+    console.error("Error en GET products:", err);
     res.status(500).json({ error: err.message });
   }
 });
+
+
 
 // Obtener un producto por ID
 router.get("/:id_producto", async (req, res) => {

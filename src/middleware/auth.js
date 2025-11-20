@@ -17,6 +17,7 @@ export const verificarToken = (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET || "SUPER_SECRETO_123");
 
     req.user = decoded;
+    console.log("🛡️ Middleware verificarToken ejecutado");
 
     next();
   } catch (err) {
